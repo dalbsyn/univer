@@ -29,9 +29,8 @@ def generate_text(num_lines: int, max_words_per_line: int):
 parser = argparse.ArgumentParser(prog='gen')
 parser.add_argument('-l', '--lines')
 parser.add_argument('-m', '--max')
-
 args = parser.parse_args()
-lines_to_generate = int(args.l)
-max_words = int(args.m)
+lines_to_generate = int(args.lines)
+max_words = int(args.max)
 
 generate_text(lines_to_generate, max_words)
