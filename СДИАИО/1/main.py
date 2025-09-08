@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QApplication, QWidget, QTextEdit, QLabel,
                                 QPushButton, QVBoxLayout, QMessageBox, 
-                                QListView)
+                                QListWidget)
 
 
 class Window(QWidget):
@@ -19,7 +19,7 @@ class Window(QWidget):
         self.label_input_list = QLabel('Входной лист')
         self.label_output_list = QLabel('Сортированный список')
         self.input_field = QTextEdit()
-        self.output_box = QListView()
+        self.output_box = QListWidget()
         self.sort_button = QPushButton('!СОРТИРОВАТЬ!')
     
     def place_widgets(self):
@@ -44,6 +44,7 @@ class Window(QWidget):
             self.counter += 1
             self.line_dict[i] = len(i.split())
             print(f"{self.counter} {i.split()} {len(i.split())}")
+            self.output_box.addItem(i)
         print(self.line_dict)
 
 app = QApplication()
