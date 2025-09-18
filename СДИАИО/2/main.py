@@ -1,16 +1,13 @@
 import sys
 from PySide6.QtWidgets import (QApplication, QVBoxLayout, QLineEdit, QWidget,
                                QPushButton, QTableWidget, QTableWidgetItem,
-                               QLabel, QMainWindow)
+                               QLabel, QMessageBox)
 import algo
 
 class Window(QWidget):
-    """
-    Класс для создания главного окна приложения "Наибольшая возрастающая подпоследовательность".
-    """
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("TEST")
+        self.setWindowTitle("ЗАГОЛОВИЧИЩЕ ОКНОШИЩА")
         self.init_layout()
         self.init_widgets()
         self.place_widgets()
@@ -42,15 +39,12 @@ class Window(QWidget):
 
     def parse_input(self):
         self.input = self.field_input.text()
-        self.list =  self.input.split(' ')
-        self.int_list = []
-        print(self.input)
-        print(self.list)
-        for i in self.list:
-            self.int_list.append(int(i))
-        print(self.int_list)
-        algo.fund_subsequence(self.int_list)
-
+        self.processed_input = algo.sort(self.input)
+        if self.processed_input == 0:
+            QMessageBox(text='''ОШИБКА: ВВОДИТЕ ТОЛЬКО ЧИСЛА.
+НАРУЖЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ (в т.ч. пробел).
+НЕОБРАБАТЫВАЕМОЕ ИСКЛЮЧЕНИЕ.''').exec()
+        print(self.processed_input)
 
 
 app = QApplication(sys.argv)
