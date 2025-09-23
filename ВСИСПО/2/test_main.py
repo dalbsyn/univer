@@ -1,10 +1,10 @@
 from main import check, cyr, num, char
 
-string = 'TeSt СТроКА 34 ГарАЖ!~ HaTsuNe mIKu'
+string = 'TeSt СТроКА 34 ГарАЖ!~ GaRaGE'
 
 def test_check():
     result = check(string)
-    assert result == 'TeStHaTsuNemIKu'
+    assert result == 'TeStGaRaGE'
 
 def test_cyr():
     result = cyr(string)
@@ -16,4 +16,4 @@ def test_num():
 
 def test_char():
     result = char(string)
-    assert result == [' ', ' ', ' ', '!', '~', ' ', ' ']
+    assert result == [' ', ' ', ' ', '!', '~', ' ']
