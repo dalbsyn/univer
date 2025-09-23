@@ -2,8 +2,9 @@
 using namespace std;
 
 int main(){
-    std::wcout << "Name:  \"Меткие стрелки\"\n";
-    std::wcout << "Avtor: \"Теодор Гриц\"\n";
-    std::wcout << "Izdatelstvo: \"Детгиз\"\n";
-    std::wcout << "Pages: 447\n";
+    setlocale(LC_ALL, "");
+    std::wcout << L"Name       : \"Меткие стрелки\"\n";
+    std::wcout << L"Avtor      : \"Теодор Гриц\"\n";
+    std::wcout << L"Izdatelstvo: \"Детгиз\"\n";
+    std::wcout << L"Pages      : 447\n";
 }

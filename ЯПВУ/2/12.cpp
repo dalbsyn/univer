@@ -3,5 +3,5 @@ using namespace std;
 
 int main(){
     // 10 вариант
-    std::wcout << "cout<<”C\\:Program Files\\VS2005”";
+    std::cout << "cout<<”C\\:Program Files\\VS2005”";
 }
