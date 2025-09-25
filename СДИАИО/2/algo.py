@@ -27,7 +27,7 @@ def find_all_increasing_subsequences(arr):
     """
     def generate_subsequences(current_seq, remaining_arr):
         if not remaining_arr:
-            # Check if the generated subsequence is increasing
+            # Проверка подпоследовательности на возрастание
             is_increasing = True
             for i in range(1, len(current_seq)):
                 if current_seq[i] <= current_seq[i-1]:

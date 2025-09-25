@@ -82,7 +82,7 @@ class Window(QWidget):
         """
         Разукрашивание нвп
         """
-        self.color: QColor = QColor("#FF2A2A")
+        self.color = QColor("#FF2A2A")
         self.item0 = self.output_box.item(0, 0)
         self.item1 = self.output_box.item(0, 1)
 
