@@ -23,12 +23,16 @@ class Window(QWidget):
         self.setLayout(self.main_layout)
     
     def init_groupboxes(self):
-        self.gb_ro_textbox = QGroupBox('Область вывода результата: ')
-        self.layout_gb_ro_textbox = QGridLayout()
-        self.gb_ro_textbox.setLayout(self.layout_gb_ro_textbox)
+        self.gb_in_textbox = QGroupBox('Область исходного текста: ')
+        self.gb_ou_textbox = QGroupBox('Область выходного результата: ')
+        self.layout_gb_ou_textbox = QGridLayout()
+        self.layout_gb_in_textbox = QGridLayout()
+        self.gb_in_textbox.setLayout(self.layout_gb_in_textbox)
+        self.gb_ou_textbox.setLayout(self.layout_gb_ou_textbox)
     
     def init_widgets(self):
         self.main_label = QLabel("РАСПЕЧАТЫВАТЕЛЬ ТЕКСТА ОБРАТНЫЙ")
+        self.input_text_box = QTextBrowser()
         self.read_only_textbox = QTextBrowser()
         self.label_file_path = QLabel("Путь к файлу: не выбран")
         self.button_select_file = QPushButton("Выбрать файл")
@@ -37,14 +41,16 @@ class Window(QWidget):
     
     def place_widgets(self):
         self.main_layout.addWidget(self.main_label, 0, 0, 1, 2)
-        self.main_layout.addWidget(self.gb_ro_textbox, 1, 0, 1, 2)
+        self.main_layout.addWidget(self.gb_ou_textbox, 1, 1, 1, 1)
+        self.main_layout.addWidget(self.gb_in_textbox, 1, 0, 1, 1)
         self.main_layout.addWidget(self.label_file_path, 2, 0, 1, 2)
         self.main_layout.addWidget(self.button_select_file, 3, 0, 1, 1)
         self.main_layout.addWidget(self.make_button, 3, 1, 1, 1)
         self.main_layout.addWidget(self.explanation, 4, 0, 1, 2)
     
     def place_into_groupboxes(self):
-        self.layout_gb_ro_textbox.addWidget(self.read_only_textbox, 0, 0)
+        self.layout_gb_ou_textbox.addWidget(self.read_only_textbox, 0, 0)
+        self.layout_gb_in_textbox.addWidget(self.input_text_box, 0, 0)
     
     def customize_window(self):
         self.setWindowTitle("РАСПЕЧАТЫВАТЕЛЬ ТЕКСТА ОБРАТНЫЙ")
@@ -61,16 +67,29 @@ class Window(QWidget):
         self.file_selector = QFileDialog()
         self.file_path = self.file_selector.getOpenFileName()[0]
         self.label_file_path.setText(f"Путь к файлу: {self.file_path}")
+        self.input_text_box.clear()
+        self.insert_into_input(self.file_path)
     
+    def insert_into_input(self, file_path):
+        self.input = algo.get_text(file_path)
+        if self.input == 400:
+            self.error()
+        else:
+            self.input_text_box.setText(self.input)
+
     def make(self):
         self.read_only_textbox.clear()
         self.words = algo.reverse_output_file(self.file_path)
-        if self.words != 0:
+        if self.words == 400:
+            self.error()
+        else:
             self.result = algo.output(self.words)
             self.read_only_textbox.setText(self.result)
-        else:
-            QMessageBox(text="""Вы не выбрали файл или выбранный файл является
+    
+    def error(self):
+        QMessageBox(text="""Вы не выбрали файл или выбранный файл является
 двоичным, который невозможно считать.\nВыберите другой файл.""").exec()
+
 
 
 app = QApplication()
