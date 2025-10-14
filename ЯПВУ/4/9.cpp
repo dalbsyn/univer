@@ -1,26 +1,30 @@
 #include<iostream>
 using namespace std;
 
-float procent(int number){
-    int result = number/100;
-    wcout << result;
-    return result;
+float procent(float number){
+    return number/100.00;
 }
+
 int main(){
-    int kolich, cena; // количество, цена
+    float kolich, cena; // количество, цена
     printf("Введите количество товара: ");
     wcin >> kolich;
     printf("Введите цену за товар: ");
     wcin >> cena;
+
+    float summary = kolich * cena;
+
     if (kolich > 0 && kolich <= 100){
-        printf("Скидка 0%, сумма: %d.", (kolich * cena));
+        printf("Скидка 0%, сумма: %.3f.", summary);
     } else if (kolich >= 100 && kolich <= 200){
-        printf("%d", procent(3));
-        printf("Скидка 3%, сумма со скидкой: %d.", ((kolich * cena * procent(3))));
+        float result = summary - (summary * procent(3));
+        printf("Скидка 3%, сумма со скидкой: %.3f.", result);
     } else if (kolich >= 200 && kolich <= 300){
-        printf("Скидка 5%, сумма со скидкой: %d.", ((kolich * cena * procent(5))));
+        float result = summary - (summary * procent(5));
+        printf("Скидка 5%, сумма со скидкой: %.3f.", result);
     } else if (kolich >= 300){
-        printf("Скидка 7%, сумма со скидкой: %d.", ((kolich * cena * procent(7))));
+        float result = summary - (summary * procent(7));
+        printf("Скидка 7%, сумма со скидкой: %.3f.", result);
     } else {
         printf("Введено неверное значение количества.");
     }
