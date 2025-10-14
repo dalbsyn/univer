@@ -1,2 +1,4 @@
 pyside6
 pytest
+networkx
+matplotlib
