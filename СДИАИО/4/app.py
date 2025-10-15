@@ -30,7 +30,7 @@ class DijkstraGraph(QWidget):
     def plot_graph(self, graph_dict: dict, start_city, destination_city):
         self.clear_plot()
 
-        shortest_distance, shortest_path = dijkstra.dijkstra(graph_dict, start_city, destination_city)
+        shortest_path = dijkstra.dijkstra(graph_dict, start_city, destination_city)[1]
 
         G = nx.Graph(graph_dict)
         
@@ -42,16 +42,31 @@ class DijkstraGraph(QWidget):
             for neighbor, distance in neighbors.items():
                 G.add_edge(city, neighbor, weight=distance)
         
-        # Draw the graph
-        pos = nx.spring_layout(G)
-        nx.draw(G, pos, with_labels=True, node_size=1500, node_color="skyblue", font_size=10, font_weight="bold")
+        # Сами вершины
+        nx.draw_networkx_nodes(G, pos, 
+                        ax=self.ax, 
+                        node_size=800, 
+                        node_color='red', 
+                        linewidths=1,
+                        edgecolors='gray')
         
+        # Сами ребра
+        nx.draw_networkx_edges(G, pos, 
+                               ax=self.ax,
+                               width=2, 
+                               edge_color='gray')
+        
+        # Названия вершин
+        nx.draw_networkx_labels(G, pos, ax=self.ax, font_size=12, font_weight='bold')
+        
+        # Список весов ребер
         edge_labels = nx.get_edge_attributes(G, 'weight')
         
-        # Highlight shortest path
+        # Подсветка кратчайшего пути
         shortest_path_edges = [(shortest_path[i], shortest_path[i + 1]) for i in range(len(shortest_path) - 1)]
         nx.draw_networkx_edges(G, pos, edgelist=shortest_path_edges, edge_color='red', width=2)
 
+        # Веса у ребер
         nx.draw_networkx_edge_labels(G, pos, 
                         ax=self.ax, 
                         edge_labels=edge_labels, 
@@ -125,21 +140,25 @@ class InputGraph(QWidget):
 
         self.canvas.draw()
 
-        
-class Graphs(QTabWidget):
+class Graphs(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.init_tabs()
-        self.create_tabs()
+        self.init_layout()
+        self.init_widgets()
+        self.place_widgets()
     
-    def init_tabs(self):
+    def init_layout(self):
+        self.layout_main = QVBoxLayout()
+        self.setLayout(self.layout_main)
+    
+    def init_widgets(self):
         self.input_graph = InputGraph()
         self.dijkstra_graph = DijkstraGraph()
     
-    def create_tabs(self):
-        self.addTab(self.input_graph, "Выходной граф")
-        self.addTab(self.dijkstra_graph, "Кратчаший путь по алгоритму Дейкстры")
+    def place_widgets(self):
+        self.layout_main.addWidget(self.input_graph)
+        self.layout_main.addWidget(self.dijkstra_graph)
 
 
 class Configure(QFormLayout):
@@ -160,7 +179,6 @@ class Configure(QFormLayout):
         self.lineedit_end_point = self.widget_lineedit_start_point()
         self.button_apply = QPushButton('Применить настройки')
         self.button_create = QPushButton('Построить граф')
-        self.button_dijkstra = QPushButton('Построить кратчаший путь')
     
     def place_widgets(self):
         self.addRow(self.line)
@@ -169,7 +187,7 @@ class Configure(QFormLayout):
         self.addRow(self.end_point, self.lineedit_end_point)
         self.addRow(self.row_amount, self.spinbox_row_amount)
         self.addRow(self.button_apply)
-        self.addRow(self.button_create, self.button_dijkstra)
+        self.addRow(self.button_create)
     
     def title_label(self):
         self.title = QLabel('Параметры')
@@ -258,7 +276,6 @@ class Table(QTableWidget):
             print(f"Table.get_matrix(): граф: {self.graph}")
 
         return self.graph
-
         
     def error_message(self, text):
         self.message = QMessageBox(text = text)
@@ -293,23 +310,28 @@ class MainWindow(QWidget):
     
     def connections(self):
         self.configure.button_apply.clicked.connect(self.apply_configuration)
-        self.configure.button_create.clicked.connect(self.create_graph)
-        self.configure.button_dijkstra.clicked.connect(self.dijkstra)
+        self.configure.button_create.clicked.connect(self.dijkstra)
 
     def apply_configuration(self):
         self.result = self.configure.get_row_amount()
         self.table.change_row_amount(self.result)
     
-    def create_graph(self):
-        self.graph = self.table.get_matrix()   
-        self.start_node = self.configure.get_current_points()[0]
-        self.graphs.input_graph.plot_graph(self.graph)
-    
     def dijkstra(self):
         self.graph = self.table.get_matrix()
         self.current_points = self.configure.get_current_points()
         print(f"Текущий граф: {self.graph}\nНачальная вершина: {self.current_points[0]}\nКонечная вершина: {self.current_points[1]}")
-        self.graphs.dijkstra_graph.plot_graph(self.graph, self.current_points[0], self.current_points[1])
+        if self.graph == {}:
+            self.error_message("Пустой граф.")
+        elif self.current_points[0] == "" or self.current_points[1] == "":
+            self.error_message("Отстутсвует начальная или конечная (или обе) вершины.")
+        else:
+            self.graphs.input_graph.plot_graph(self.graph)
+            self.graphs.dijkstra_graph.plot_graph(self.graph, self.current_points[0], self.current_points[1])
+
+    def error_message(self, text):
+        self.message = QMessageBox(text = text)
+        self.message.setIcon(QMessageBox.Icon.Warning)
+        self.message.show()
 
 app = QApplication()
 window = MainWindow()
