@@ -31,11 +31,10 @@ int main(){
     cin >> value;
 
     for (int i = 0; i <= max; i++){
-        for (int j = 0; j <= max; j++){
-            if (i == j){
-                amount++;
-            }
+        if (numbers_array[i] == value){
+            amount++;
         }
     }
-    cout << amount;
-}    int prev = 0;
+    
+    printf("Число %i встречается %i раза", value, amount);
+}
