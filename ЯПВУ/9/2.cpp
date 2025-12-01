@@ -1,8 +1,8 @@
 #include<iostream>
 using namespace std;
 
-int sravnenie(int first, int second){
-    int result = 0;
+wchar_t sravnenie(wchar_t first, wchar_t second){
+    wchar_t result;
     if (first < second){
         result = second;
     } else if (first > second){
@@ -12,15 +12,18 @@ int sravnenie(int first, int second){
 }
 
 int main(){
-    int first, second;
+    setlocale(LC_ALL, "");
 
-    printf("Введите первое число: ");
-    cin >> first;
+    wchar_t first, second;
+
+    wcout << L"Введите первый символ: ";
+    wcin >> first;
   
-    printf("Введите второе число: ");
-    cin >> second;
+    wcout << L"Введите второй символ: ";
+    wcin >> second;
 
-    int result = sravnenie(first, second);
+    wchar_t result = sravnenie(first, second);
 
-    printf("Большее число из %i и %i: %i", first, second, result);
+    wcout << L"Больший символ из " << first << L" и " << second << L": " << result;
+
 }
